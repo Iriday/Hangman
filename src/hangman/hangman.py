@@ -18,13 +18,15 @@ def remove_all(string, regex):
     return re.sub(regex, "", string)
 
 
-def open_letter(entire_word, word_to_update, letter):
-    opened = False
+def uncover_letter(entire_word, word_to_update, letter):
+    uncovered = -1  # -1-> no letter
     for i in range(0, len(entire_word)):
         if entire_word[i] == letter:
+            if word_to_update[i] == letter:
+                return 0  # 0-> already uncovered
             word_to_update[i] = letter
-            opened = True
-    return opened
+            uncovered = 1  # 1-> uncovered
+    return uncovered
 
 
 def start_game():
@@ -39,22 +41,26 @@ def start_game():
     word_hint_list = create_list_of(len(rand_word), "-")
     word_hint_str = remove_all(word_hint_list.__str__(), regex)
 
-    for num_of_tries in range(0, 10):
+    num_of_tries = 8
+    while num_of_tries != 0:
         output(f"\n{word_hint_str}")
 
         input_letter = input_("Input a letter: ")
 
-        opened = open_letter(rand_word, word_hint_list, input_letter)
-        if not opened:
+        uncovered = uncover_letter(rand_word, word_hint_list, input_letter)
+        if uncovered == -1:
             output("No such letter in the word")
-            continue
-
-        word_hint_str = remove_all(word_hint_list.__str__(), regex)
-        if rand_word == word_hint_str:
-            output("\nYou survived!")
-            return
-
-    output("\nYou are hanged!")
+            num_of_tries -= 1
+        elif uncovered == 0:
+            output("No improvements")
+            num_of_tries -= 1
+        else:
+            word_hint_str = remove_all(word_hint_list.__str__(), regex)
+            if rand_word == word_hint_str:
+                output(f"\n{rand_word}\nYou guessed the word!\nYou survived!")
+                break
+    else:
+        output("\nYou are hanged!")
 
 
 start_game()
