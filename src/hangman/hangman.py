@@ -1,4 +1,5 @@
 from random import choice
+from string import ascii_letters
 import re
 
 
@@ -29,14 +30,26 @@ def uncover_letter(entire_word, word_to_update, letter):
     return uncovered
 
 
+def input_check(input_letter_, inputted_letters_):
+    if len(input_letter_) != 1:
+        return "You should print a single letter"
+    if input_letter_ not in ascii_letters:
+        return "It is not an ASCII letter"
+    if input_letter_ in inputted_letters_:
+        return "You already typed this letter"
+    return 0
+
+
 def start_game():
     output("H A N G M A N")
 
     WORDS = ("java", "kotlin", "python", "javascript", "rust", "ruby", "perl", "swift", "scratch", "haskel", "pascal",
-             "fortran", "ada", "apex", "groovy", "dart", "scala", "c++", "assembly", "prolog")
+             "fortran", "ada", "apex", "groovy", "dart", "scala", "cplusplus", "assembly", "prolog")
     rand_word = choice(WORDS)
 
     regex = "[', \\[\\]]+"
+
+    inputted_letters = set()
 
     word_hint_list = create_list_of(len(rand_word), "-")
     word_hint_str = remove_all(word_hint_list.__str__(), regex)
@@ -46,18 +59,20 @@ def start_game():
         output(f"\n{word_hint_str}")
 
         input_letter = input_("Input a letter: ")
+        err_message = input_check(input_letter, inputted_letters)
+        if err_message != 0:
+            output(err_message)
+            continue
+        inputted_letters.add(input_letter)
 
         uncovered = uncover_letter(rand_word, word_hint_list, input_letter)
         if uncovered == -1:
             output("No such letter in the word")
             num_of_tries -= 1
-        elif uncovered == 0:
-            output("No improvements")
-            num_of_tries -= 1
         else:
             word_hint_str = remove_all(word_hint_list.__str__(), regex)
             if rand_word == word_hint_str:
-                output(f"\n{rand_word}\nYou guessed the word!\nYou survived!")
+                output(f"\nYou guessed the word {rand_word}!\nYou survived!")
                 break
     else:
         output("\nYou are hanged!")
