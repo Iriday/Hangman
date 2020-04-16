@@ -15,6 +15,15 @@ def remove_all(string, regex):
     return re.sub(regex, "", string)
 
 
+def get_words_from_file(filepath):
+    words = list()
+    with open(filepath, mode="r") as file:
+        for line in file:
+            words.extend(re.split("[,\\s]+", line.strip().lower()))
+
+    return list(filter(lambda word: word.__len__() > 0, words))
+
+
 def uncover_letter(entire_word, word_to_update, letter):
     uncovered = -1  # -1-> no letter
     for i in range(0, len(entire_word)):
@@ -38,11 +47,13 @@ def input_check(input_letter_, inputted_letters_):
 
 def menu():
     while True:
-        in_ = input_("1. Play the game\n0. Exit\n")
-        if in_ == "exit" or in_ == "0" or in_ == "quit" or in_ == "leave" or in_ == "stop" or in_ == "break" or in_ == "bye":
+        in_ = input_("1. Play the game\n2. Import words\n0. Exit\n")
+        if in_ == "0" or in_ == "exit" or in_ == "quit" or in_ == "leave" or in_ == "stop" or in_ == "break" or in_ == "bye":
             return 0
-        elif in_ == "play" or in_ == "1" or in_ == "start" or in_ == "run":
+        elif in_ == "1" or in_ == "play" or in_ == "start" or in_ == "run":
             return 1
+        elif in_ == "2" or in_ == "import" or in_ == "import words":
+            return 2
         else:
             output("Incorrect input\n")
 
@@ -54,9 +65,19 @@ def start_game():
              "fortran", "ada", "apex", "groovy", "dart", "scala", "cplusplus", "assembly", "prolog")
 
     while True:
-        in_command = menu()
-        if in_command == 0:
+        option = menu()
+        if option == 0:
             break
+        elif option == 2:
+            try:
+                words = get_words_from_file(input_("Enter filepath: "))
+                if words.__len__() == 0:
+                    output("Something went wrong, check filepath\\file content\n")
+                    continue
+            except Exception:
+                output("Something went wrong, check filepath\\file content\n")
+                continue
+            WORDS = words
 
         rand_word = choice(WORDS)
 
