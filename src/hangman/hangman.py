@@ -7,12 +7,8 @@ def input_(message=""):
     return input(message).strip().lower()
 
 
-def output(data_=""):
-    print(data_)
-
-
-def create_list_of(size, char=" "):
-    return list(char * size)
+def output(data=""):
+    print(data)
 
 
 def remove_all(string, regex):
@@ -41,13 +37,14 @@ def input_check(input_letter_, inputted_letters_):
 
 
 def menu():
-    in_ = input_('Type "play" to play the game, "exit" to quit: ')
-
-    if in_ == "exit" or in_ == "2" or in_ == "quit" or in_ == "leave" or in_ == "stop" or in_ == "break" or in_ == "bye":
-        return 2
-    elif in_ != "play" and in_ != "1" and in_ != "start":
-        return -1
-    return 1
+    while True:
+        in_ = input_("1. Play the game\n0. Exit\n")
+        if in_ == "exit" or in_ == "0" or in_ == "quit" or in_ == "leave" or in_ == "stop" or in_ == "break" or in_ == "bye":
+            return 0
+        elif in_ == "play" or in_ == "1" or in_ == "start" or in_ == "run":
+            return 1
+        else:
+            output("Incorrect input\n")
 
 
 def start_game():
@@ -55,22 +52,18 @@ def start_game():
 
     WORDS = ("java", "kotlin", "python", "javascript", "rust", "ruby", "perl", "swift", "scratch", "haskel", "pascal",
              "fortran", "ada", "apex", "groovy", "dart", "scala", "cplusplus", "assembly", "prolog")
-    regex = "[', \\[\\]]+"
 
     while True:
         in_command = menu()
-        if in_command == 2:
+        if in_command == 0:
             break
-        elif in_command == -1:
-            output("Unknown command")
-            continue
 
         rand_word = choice(WORDS)
 
         inputted_letters = set()
 
-        word_hint_list = create_list_of(len(rand_word), "-")
-        word_hint_str = remove_all(word_hint_list.__str__(), regex)
+        word_hint_str = len(rand_word) * "-"
+        word_hint_list = list(word_hint_str)
 
         num_of_tries = 8
         while num_of_tries != 0:
@@ -88,7 +81,7 @@ def start_game():
                 output("No such letter in the word")
                 num_of_tries -= 1
             else:
-                word_hint_str = remove_all(word_hint_list.__str__(), regex)
+                word_hint_str = "".join(word_hint_list)
                 if rand_word == word_hint_str:
                     output(f"\nYou guessed the word {rand_word}!\nYou survived!\n")
                     break
