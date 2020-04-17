@@ -47,13 +47,15 @@ def input_check(input_letter_, inputted_letters_):
 
 def menu():
     while True:
-        in_ = input_("1. Play the game\n2. Import words\n0. Exit\n")
+        in_ = input_("1. Play the game\n2. Import words\n3. Show all words\n0. Exit\n")
         if in_ == "0" or in_ == "exit" or in_ == "quit" or in_ == "leave" or in_ == "stop" or in_ == "break" or in_ == "bye":
             return 0
         elif in_ == "1" or in_ == "play" or in_ == "start" or in_ == "run":
             return 1
         elif in_ == "2" or in_ == "import" or in_ == "import words":
             return 2
+        elif in_ == "3" or in_ == "show" or in_ == "show words" or in_ == "show all words":
+            return 3
         else:
             output("Incorrect input\n")
 
@@ -78,6 +80,9 @@ def start_game():
                 output("Something went wrong, check filepath\\file content\n")
                 continue
             WORDS = words
+        elif option == 3:
+            output("Words: " + ", ".join(WORDS) + ".\n")
+            continue
 
         rand_word = choice(WORDS)
 
