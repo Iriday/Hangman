@@ -80,6 +80,8 @@ def start_game():
                 output("Something went wrong, check filepath\\file content\n")
                 continue
             WORDS = words
+            output("Words have been imported successfully\n")
+            continue
         elif option == 3:
             output("Words: " + ", ".join(WORDS) + ".\n")
             continue
